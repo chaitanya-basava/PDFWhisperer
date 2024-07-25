@@ -6,3 +6,4 @@ langchain_core~=0.2.22
 langchain_cohere~=0.1.9
 langchain_community~=0.2.9
 python-dotenv~=1.0.1
+duckduckgo-search~=6.2.3
