@@ -19,6 +19,18 @@ class LLM(Enum):
     GROQ_LLAMA_3_1 = "llama-3.1-70b-versatile"
 
     @staticmethod
+    def get_llm_by_id(llm_id: int):
+        llm_mapping = {
+            1: LLM.LLAMA_3_8B,
+            2: LLM.COHERE_COMMAND_R,
+            3: LLM.GEMMA_3_9B,
+            4: LLM.MISTRAL_7B_INSTRUCT,
+            5: LLM.GROQ_LLAMA_3_1
+        }
+
+        return llm_mapping[llm_id]
+
+    @staticmethod
     def openrouter_models():
         return {LLM.LLAMA_3_8B, LLM.GEMMA_3_9B, LLM.MISTRAL_7B_INSTRUCT}
 
