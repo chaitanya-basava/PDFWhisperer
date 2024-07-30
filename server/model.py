@@ -8,7 +8,7 @@ from langchain_cohere.chat_models import ChatCohere
 from langchain_community.chat_models import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
 
-print(load_dotenv(".env"))
+print(load_dotenv("../.env"))
 
 
 class LLM(Enum):
