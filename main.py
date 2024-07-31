@@ -4,16 +4,16 @@ import streamlit as st
 from streamlit_cookies_manager import EncryptedCookieManager
 
 from model import LLM
-from chain import get_chain, generate_response
 from pdf_parser import process_pdf
 from session_manager import AutoExpireDict
+from util import delete_old_files, directory
+from chain import get_chain, generate_response
 
+
+delete_old_files(1800)
 
 if "llm" not in st.session_state:
     st.session_state.llm = LLM.get_llm(LLM.get_llm_by_id(2))
-
-if "store" not in st.session_state:
-    st.session_state.store = AutoExpireDict(1800, "auto_expire_dict.pkl", 10)
 
 cookies = EncryptedCookieManager(
     prefix="pdf_whisperer_",
@@ -28,6 +28,10 @@ if 'uuid' not in cookies:
     cookies.save()
 
 unique_id = cookies['uuid']
+
+if "store" not in st.session_state:
+    st.session_state.store = AutoExpireDict(1800,f"{directory}{unique_id}.pkl",
+                                            10, True)
 
 
 def main():
@@ -58,6 +62,7 @@ def main():
                 response = generate_response(conversational_rag_chain, prompt, session_id)
                 st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
+            st.session_state.store.save_to_pickle()
 
 
 if __name__ == "__main__":

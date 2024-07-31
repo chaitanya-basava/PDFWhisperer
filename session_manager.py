@@ -1,6 +1,7 @@
 import time
-import threading
+import atexit
 import pickle
+import threading
 from collections.abc import MutableMapping
 from typing import Any, Dict, Iterator
 
@@ -18,10 +19,12 @@ class AutoExpireDict(MutableMapping):
     :param _pickle_file: The file to save the dictionary to
     :param _convo_history_length: The length of the conversation history to store for each session
     """
-    def __init__(self, _timeout: int, _pickle_file: str, _convo_history_length: int) -> None:
+    def __init__(self, _timeout: int, _pickle_file: str,
+                 _convo_history_length: int, store_cookie: bool = False) -> None:
         self.timeout = _timeout
         self.pickle_file = _pickle_file
         self._chat_history_length = _convo_history_length * 2
+        self.store_cookie = store_cookie
 
         self.store: Dict[Any, Dict[str, Any]] = {}
         self.lock = threading.RLock()
@@ -80,8 +83,8 @@ class AutoExpireDict(MutableMapping):
             pass
 
     def save_on_exit(self) -> None:
-        import atexit
-        atexit.register(self.save_to_pickle)
+        if not self.store_cookie:
+            atexit.register(self.save_to_pickle)
 
     def get_session_history(self, session_id: str) -> BaseChatMessageHistory:
         if session_id not in self.store:
