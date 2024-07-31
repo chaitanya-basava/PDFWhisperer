@@ -4,6 +4,7 @@ import pickle
 from collections.abc import MutableMapping
 from typing import Any, Dict, Iterator
 
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
 
@@ -93,11 +94,26 @@ class AutoExpireDict(MutableMapping):
         self.__setitem__(session_id, new_chat)
         return new_chat
 
+    def get_messages(self, session_id: str) -> list[dict]:
+        if session_id not in self.store:
+            return []
+        messages = self.__getitem__(session_id).messages
+        stored_messages = []
+        for i in range(len(messages)):
+            t = {}
+            if isinstance(messages[i], HumanMessage):
+                t["role"] = "user"
+            elif isinstance(messages[i], AIMessage):
+                t["role"] = "assistant"
+            t["content"] = messages[i].content
+            stored_messages.append(t)
+        return stored_messages
+
 
 if __name__ == '__main__':
     timeout = 2  # seconds
     pickle_file = 'test_auto_expire_dict.pkl'
-    d = AutoExpireDict(timeout, pickle_file)
+    d = AutoExpireDict(timeout, pickle_file, 1)
 
     # Example operations
     d['a'] = 1

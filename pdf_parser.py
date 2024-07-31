@@ -1,9 +1,10 @@
 import fitz
+import hashlib
 from io import BytesIO
-from typing import Optional
+from typing import Optional, Tuple
 
-from langchain import FAISS
 from langchain_cohere import CohereEmbeddings
+from langchain_community.vectorstores import FAISS
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -37,7 +38,10 @@ def extract_text_and_urls(
     return _text
 
 
-def process_pdf(pdf_path: str) -> VectorStoreRetriever:
+def process_pdf(
+        uploaded_pdf: Optional[BytesIO] = None,
+        pdf_path: Optional[str] = None
+) -> tuple[VectorStoreRetriever, str]:
     embeddings = CohereEmbeddings(model="embed-multilingual-v2.0")
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
@@ -46,10 +50,17 @@ def process_pdf(pdf_path: str) -> VectorStoreRetriever:
         is_separator_regex=False,
     )
 
-    text = extract_text_and_urls(pdf_path=pdf_path)
+    text = (
+        extract_text_and_urls(pdf_path=pdf_path) if pdf_path
+        else extract_text_and_urls(uploaded_pdf=uploaded_pdf)
+    )
     chunks = text_splitter.split_text(text)
 
     vector_store = FAISS.from_texts(chunks, embeddings)
     retriever = vector_store.as_retriever()
 
-    return retriever
+    return retriever, generate_hashcode(text)
+
+
+def generate_hashcode(text):
+    return hashlib.md5(text.encode()).hexdigest()
