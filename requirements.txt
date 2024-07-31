@@ -11,3 +11,4 @@ duckduckgo-search~=6.2.3
 streamlit~=1.37.0
 requests~=2.32.2
 streamlit_cookies_manager~=0.2.0
+faiss-cpu~=1.8.0.post1
