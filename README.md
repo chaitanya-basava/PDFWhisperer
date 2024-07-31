@@ -1,7 +1,7 @@
 # PDFWhisperer
 
 The latest version of the application has been deployed on streamlit cloud, and
-can be accessed through this [link](https://pdf-whisperer.streamlit.app/) [WIP].
+can be accessed through this [link](https://pdf-whisperer.streamlit.app/).
 
 ## Description
 
@@ -13,7 +13,8 @@ chat sessions with the content of the PDFs. This project includes components for
 - Implementing a processing chain to facilitate user interactions with PDF content
 
 **Purpose:** This project is a hands-on learning experience for exploring and mastering Generative AI tools
-and technologies.
+and technologies. This project gives a hands-on experience on building Gen AI applications using retrieval
+augmented generation (RAG).
 
 ## Run on local
 
@@ -41,3 +42,14 @@ streamlit run main.py
 - Langchain: Utilized for implementing the chatbot functionality.
 - Streamlit: Powers the frontend interface.
 - Groq cloud, Openrouter, Cohere: for accessing LLMs
+
+## Future Scope
+
+There are various ways to expand the project, such as:
+
+- giving the llm access to internet using function calling
+- converting the llm chain into an agent, allowing it to make its own decisions
+- adding the ability to chat with multiple pdfs at once
+
+Thanks for checking out the repository, feel free to connect with me on
+[LinkedIn](https://www.linkedin.com/in/chaitu-basava/).

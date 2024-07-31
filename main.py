@@ -30,7 +30,7 @@ if 'uuid' not in cookies:
 unique_id = cookies['uuid']
 
 if "store" not in st.session_state:
-    st.session_state.store = AutoExpireDict(1800,f"{directory}{unique_id}.pkl",
+    st.session_state.store = AutoExpireDict(1800, f"{directory}{unique_id}.pkl",
                                             10, True)
 
 
